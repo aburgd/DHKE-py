@@ -1,22 +1,38 @@
-import random
-import time
+import os
+import sys
 
-timestamp = int(time.time())
-random.seed(timestamp)
+
+def generate():
+    num_bytes = os.urandom(3)
+    num = int.from_bytes(num_bytes, sys.byteorder)
+    return num
 
 
 def gen_check(n):
-    if not isprime(n):
-        while not isprime(n):
-            n = random.randint(0, timestamp)
+    '''checks generated integer for primality'''
+    if aks(n):
+        return n
+    elif not aks(n):
+        while not aks(n):
+            print("Not using %d" % n)
+            n = generate()
+    gen_check(n)
+    return n
 
 
 def input_check(n):
-    if not isprime(n):
-        n = input("Sorry, that number isn't prime. Please try another: ")
+    '''checks user input primality'''
+    if aks(n):
+        return n
+    elif not aks(n):
+        while not aks(n):
+            print("Sorry, that number isn't prime.")
+            n = input("Please try another: ")
+    input_check(n)
+    return n
 
 
-def isprime(n):
+def aks(n):
     '''check if integer n is a prime'''
     # make sure n is a positive integer
     n = abs(int(n))
@@ -38,42 +54,38 @@ def isprime(n):
 
 
 def publicKey():
+    '''generates a public key integer'''
+    # gets or makes base integers
     resp = input("Do you have a shared base integer? (y/n): ")
     if resp.lower() == "y":
         b = input("Please enter your shared base integer: ")
         input_check(b)
     elif resp.lower() == "n":
-        b = random.randint(0, timestamp)
-        gen_check(b)
-        print("Your shared base integer is: ", b)
-
+        b = generate()
+        print("Your shared base integer is: ", gen_check(b))
+    # gets or makes secret integer
     resp = input("Do you have a secret integer? (y/n): ")
     if resp.lower() == "y":
         alex = input("Please enter your secret integer: ")
         input_check(alex)
     elif resp.lower() == "n":
-        alex = random.randint(0, timestamp)
-        gen_check(alex)
-        print("Your secret integer is: ", alex)
-
+        alex = generate()
+        print("Your secret integer is: ", gen_check(alex))
+    # gets or makes shared modulus
     resp = input("Do you have a shared modulus? (y/n): ")
     if resp.lower() == "y":
         mp = input("Please enter your shared modulus: ")
         input_check(mp)
     elif resp.lower() == "n":
-        mp = random.randint(0, timestamp)
-        gen_check(mp)
-        print("Your shared modulus is: ", mp)
+        mp = generate()
+        print("Your shared modulus is: ", gen_check(mp))
 
-    b = int(b)
-    alex = int(alex)
-    mp = int(mp)
-    pubKey = b ** alex
-    pubKey = pubKey % mp
+    pubKey = int(b) ** int(alex) % int(mp)
     return pubKey
 
 
 def sharedSecret():
+    '''generates a shared secret integer'''
     pK = input("Please enter your public key: ")
     mp = input("Please enter your shared modulus: ")
     alex = input("Please enter your secret integer: ")
