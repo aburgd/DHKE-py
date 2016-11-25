@@ -5,4 +5,4 @@ machine:
 test:
   override:
     - python crypto.py
-    - python crypto_tetst.py
+    - python crypto_test.py
